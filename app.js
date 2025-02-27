@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded' , () => {
+document.addEventListener('DOMContentLoaded', () => {
     const bird = document.querySelector('.bird')
     const gameDisplay = document.querySelector('.game-container')
     const ground = document.querySelector('.ground-moving')
@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded' , () => {
     let isGameOver = false
     let gap = 430
 
-
     function startGame() {
         birdBottom -= gravity
         bird.style.bottom = birdBottom + 'px'
@@ -18,7 +17,7 @@ document.addEventListener('DOMContentLoaded' , () => {
     let gameTimerId = setInterval(startGame, 20)
 
     function control(e) {
-        if (e.keyCode === 32) {
+        if (e.keyCode === 32) { // Spacebar se jump
             jump()
         }
     }
@@ -26,10 +25,12 @@ document.addEventListener('DOMContentLoaded' , () => {
     function jump() {
         if (birdBottom < 500) birdBottom += 50
         bird.style.bottom = birdBottom + 'px'
-        console.log(birdBottom)
+        console.log("Jumping! Bird Bottom: ", birdBottom)
     }
-    document.addEventListener('keyup', control)
 
+    // **Fix: Mouse Click Event Listener Add Karna**
+    document.addEventListener('keyup', control)
+    document.addEventListener('click', jump) // 🛠 Mouse Click se Jump
 
     function generateObstacle() {
         let obstacleLeft = 500
@@ -49,7 +50,7 @@ document.addEventListener('DOMContentLoaded' , () => {
         topObstacle.style.bottom = obstacleBottom + gap + 'px'
 
         function moveObstacle() {
-            obstacleLeft -=2
+            obstacleLeft -= 2
             obstacle.style.left = obstacleLeft + 'px'
             topObstacle.style.left = obstacleLeft + 'px'
 
@@ -60,28 +61,25 @@ document.addEventListener('DOMContentLoaded' , () => {
             }
             if (
                 obstacleLeft > 200 && obstacleLeft < 280 && birdLeft === 220 &&
-                (birdBottom < obstacleBottom + 153 || birdBottom > obstacleBottom + gap -200)||
-                birdBottom === 0 
-                ) {
+                (birdBottom < obstacleBottom + 153 || birdBottom > obstacleBottom + gap - 200) ||
+                birdBottom === 0
+            ) {
                 gameOver()
                 clearInterval(timerId)
             }
         }
-        let timerId = setInterval(moveObstacle, 20) 
+        let timerId = setInterval(moveObstacle, 20)
         if (!isGameOver) setTimeout(generateObstacle, 3000)
-
     }
     generateObstacle()
 
-
     function gameOver() {
         clearInterval(gameTimerId)
-        console.log('game over')
+        console.log('Game Over!')
         isGameOver = true
         document.removeEventListener('keyup', control)
+        document.removeEventListener('click', jump) // 🛠 Mouse Click Event Remove on Game Over
         ground.classList.add('ground')
         ground.classList.remove('ground-moving')
     }
-
-
 })
